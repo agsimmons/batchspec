@@ -14,7 +14,7 @@ elif os.name == 'nt':
     SOX_PATH = shutil.which('sox.exe')
 
 if not SOX_PATH:
-    print('ERROR: sox not found in path')
+    print('ERROR: SoX not found in path')
     sys.exit(1)
 
 

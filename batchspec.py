@@ -7,16 +7,6 @@ import subprocess
 
 LOSSLESS_EXTENSIONS = ['.flac', '.wav']
 
-SOX_PATH = None
-if os.name == 'posix':
-    SOX_PATH = shutil.which('sox')
-elif os.name == 'nt':
-    SOX_PATH = shutil.which('sox.exe')
-
-if not SOX_PATH:
-    print('ERROR: SoX not found in path')
-    sys.exit(1)
-
 
 def _parse_args():
     parser = argparse.ArgumentParser(description='Batch create spectogram images from files in specified directory')
@@ -24,11 +14,35 @@ def _parse_args():
     parser.add_argument('dest_directory', help='Location to output spectrogram images. Defaults to CWD',
                         nargs='?',
                         default=os.getcwd())
+    parser.add_argument('--sox_path', help='Path to SoX executable. Will use sox or sox.exe in PATH by default')
 
     return parser.parse_args()
 
 
-def main(source_directory, dest_directory):
+def _get_sox_path(specified_sox_path):
+    sox_path = None
+    if specified_sox_path is not None:
+
+        specified_sox_path = pathlib.Path(specified_sox_path)
+        if specified_sox_path.is_file():
+            sox_path = specified_sox_path
+        else:
+            print('ERROR: Specified SoX path is not valid')
+            sys.exit(1)
+
+    elif os.name == 'posix':
+        sox_path = shutil.which('sox')
+    elif os.name == 'nt':
+        sox_path = shutil.which('sox.exe')
+
+    if sox_path:
+        return sox_path
+    else:
+        print('ERROR: SoX not found in path and not specified')
+        sys.exit(1)
+
+
+def main(source_directory, dest_directory, sox_path):
     source_directory = pathlib.Path(source_directory)
     dest_directory = pathlib.Path(dest_directory)
 
@@ -46,7 +60,7 @@ def main(source_directory, dest_directory):
         file_output_path = dest_directory / (file.stem + '.png')
 
         print('Processing {}'.format(file.name))
-        subprocess.run([SOX_PATH, file.absolute(), '-n', 'spectrogram', '-o', file_output_path])
+        subprocess.run([sox_path, file.absolute(), '-n', 'spectrogram', '-o', file_output_path])
 
     print('DONE')
 
@@ -54,4 +68,8 @@ def main(source_directory, dest_directory):
 if __name__ == '__main__':
     args = _parse_args()
 
-    main(args.source_directory, args.dest_directory)
+    source_directory = pathlib.Path(args.source_directory)
+    dest_directory = pathlib.Path(args.dest_directory)
+    sox_path = _get_sox_path(args.sox_path)
+
+    main(source_directory, dest_directory, sox_path)

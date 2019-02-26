@@ -7,14 +7,15 @@ A wrapper around SoX to generate spectrogram images for all lossless audio files
 
 # Usage
 ```
-usage: batchspec.py [-h] source_directory [dest_directory]
+usage: batchspec.py [-h] [--sox_path SOX_PATH] source_directory [dest_directory]
 
 Batch create spectogram images from files in specified directory
 
 positional arguments:
-  source_directory  Location of audio files
-  dest_directory    Location to output spectrogram images. Defaults to ./
+  source_directory     Location of audio files
+  dest_directory       Location to output spectrogram images. Defaults to CWD
 
 optional arguments:
-  -h, --help        show this help message and exit
+  -h, --help           show this help message and exit
+  --sox_path SOX_PATH  Path to SoX executable. Will use sox or sox.exe in PATH by default
 ```

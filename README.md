@@ -2,8 +2,7 @@
 A wrapper around SoX to generate spectrogram images for all lossless audio files in a directory
 
 # Requirements
-* Python 3.3+
-* SoX executable must be in your PATH
+* Python 3.5+
 
 # Usage
 ```

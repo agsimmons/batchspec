@@ -21,7 +21,7 @@ if not SOX_PATH:
 def _parse_args():
     parser = argparse.ArgumentParser(description='Batch create spectogram images from files in specified directory')
     parser.add_argument('source_directory', help='Location of audio files')
-    parser.add_argument('dest_directory', help='Location to output spectrogram images. Defaults to ./',
+    parser.add_argument('dest_directory', help='Location to output spectrogram images. Defaults to CWD',
                         nargs='?',
                         default=os.getcwd())
 
